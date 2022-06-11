@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "332286414604",
+    "project_id": "fir-da2-78c3c",
+    "storage_bucket": "fir-da2-78c3c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:332286414604:android:f8a2847e2fcd0cd3fc8329",
+        "android_client_info": {
+          "package_name": "com.tfliteflutter.tflite_flutter_plugin_example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "332286414604-micqdieudqn3eieohdiplbld97q2n470.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOQqoX4llwlxFgmvw84LfcjWPfmkPnJCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "332286414604-micqdieudqn3eieohdiplbld97q2n470.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,10 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tflite_flutter_plugin_example/classifier.dart';
 import 'package:tflite_flutter_plugin_example/login.dart';
 import 'package:tflite_flutter_plugin_example/messages.dart';
 import 'package:translator/translator.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override

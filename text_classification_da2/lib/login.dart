@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tflite_flutter_plugin_example/chat.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -22,7 +24,9 @@ class _LoginState extends State<Login> {
             ),
             SizedBox(height: 15,),
             GestureDetector(
-              onTap: (){},
+              onTap: (){
+                _loginUser1();
+              },
               child: Container(
                 height: 40,
                 width: 200,
@@ -35,7 +39,9 @@ class _LoginState extends State<Login> {
             ),
             SizedBox(height: 15,),
             GestureDetector(
-              onTap: (){},
+              onTap: (){
+                _loginUser2();
+              },
               child: Container(
                 height: 40,
                 width: 200,
@@ -50,5 +56,55 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  void _loginUser1() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: "user1@gmail.com",
+          password: "123456"
+      );
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const Chat()),
+      );
+
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+
+        print("Tài khoản chưa được đăng ký");
+
+      } else if (e.code == 'wrong-password') {
+
+        print("Mật khẩu không chính xác");
+
+      }
+    }
+  }
+
+  void _loginUser2() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: "user2@gmail.com",
+          password: "123456"
+      );
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const Chat()),
+      );
+
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+
+        print("Tài khoản chưa được đăng ký");
+
+      } else if (e.code == 'wrong-password') {
+
+        print("Mật khẩu không chính xác");
+
+      }
+    }
   }
 }
