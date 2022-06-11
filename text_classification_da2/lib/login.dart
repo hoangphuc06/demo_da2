@@ -67,7 +67,7 @@ class _LoginState extends State<Login> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Chat()),
+        MaterialPageRoute(builder: (context) => const Chat(name: "User 1",)),
       );
 
     } on FirebaseAuthException catch (e) {
@@ -92,7 +92,7 @@ class _LoginState extends State<Login> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Chat()),
+        MaterialPageRoute(builder: (context) => const Chat(name: "User 2")),
       );
 
     } on FirebaseAuthException catch (e) {
