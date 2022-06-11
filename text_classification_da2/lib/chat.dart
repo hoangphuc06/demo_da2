@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tflite_flutter_plugin_example/end.dart';
 import 'package:translator/translator.dart';
 
 import 'classifier.dart';
@@ -23,8 +24,6 @@ class _ChatState extends State<Chat> {
 
   final translator = GoogleTranslator();
 
-
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -32,6 +31,16 @@ class _ChatState extends State<Chat> {
       appBar: AppBar(
         backgroundColor: Colors.orangeAccent,
         title: Text(this.widget.name),
+        elevation: 0,
+        actions: [
+          Center(child: Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: GestureDetector(
+              onTap: _showSetting,
+              child: Icon(Icons.settings)
+            ),
+          ))
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -138,6 +147,34 @@ class _ChatState extends State<Chat> {
     else {
       print("Enter Some Text");
     }
+  }
+
+  void _showSetting() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Hủy hẹn'),
+            content: Text('Bạn có chắc chắn hủy hẹn hò không?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Không')),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => End()),
+                      (Route<dynamic> route) => false
+                  );
+                },
+                child: Text('Có'),
+              )
+            ],
+          );
+        });
   }
 }
 
