@@ -3,6 +3,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:translator/translator.dart';
+
+import 'classifier.dart';
 
 class Chat extends StatefulWidget {
   final String name;
@@ -17,6 +20,10 @@ class _ChatState extends State<Chat> {
   final TextEditingController _message = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  final translator = GoogleTranslator();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +46,9 @@ class _ChatState extends State<Chat> {
                   if (snapshot.data != null) {
                     return ListView.builder(
                       itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        Map<String, dynamic> map = snapshot.data!.docs[index]
-                            .data() as Map<String, dynamic>;
+                      itemBuilder: (context, index)  {
+                        Map<String, dynamic> map = snapshot.data!.docs[index].data() as Map<String, dynamic>;
+
                         return messages(size, map, context);
                       },
                     );
@@ -108,8 +115,12 @@ class _ChatState extends State<Chat> {
             ),
           ),
         ),
-        SizedBox(height: 10,),
-
+        //SizedBox(height: 5,),
+        Container(
+          padding: EdgeInsets.only(left: 10, right: 10),
+            alignment: map['sendby'] == _auth.currentUser!.uid ? Alignment.centerRight : Alignment.centerLeft,
+            child: PhanTich(rawtext: map['message'])
+        )
       ],
     );
   }
@@ -127,6 +138,49 @@ class _ChatState extends State<Chat> {
     else {
       print("Enter Some Text");
     }
+  }
+}
+
+class PhanTich extends StatefulWidget {
+  final String rawtext;
+  const PhanTich({Key? key, required this.rawtext}) : super(key: key);
+
+  @override
+  State<PhanTich> createState() => _PhanTichState();
+}
+
+class _PhanTichState extends State<PhanTich> {
+
+  final translator = GoogleTranslator();
+  late Classifier _classifier;
+  String engText = "";
+  String vieText = "";
+  var prediction;
+  bool isLoad = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _classifier = Classifier();
+    load();
+  }
+
+  void load() async {
+    setState((){
+      vieText = xuly(this.widget.rawtext);
+    });
+
+    await translator.translate(vieText,to: 'en', from: 'vi').then((value) => {
+      setState((){
+        engText = value.toString().toLowerCase();
+      })
+
+    });
+    setState((){
+      prediction = _classifier.classify(engText);
+      isLoad = false;
+    });
+
   }
 
   String xuly(String rawtext) {
@@ -162,4 +216,42 @@ class _ChatState extends State<Chat> {
     print(finaltext);
     return finaltext;
   }
+
+  @override
+  Widget build(BuildContext context) {
+     return isLoad? Container() : Container(
+      child: Card(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          color: prediction[1] > prediction[0]
+              ? Colors.lightGreen
+              : Colors.redAccent,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "Input: " + this.widget.rawtext,
+                style: const TextStyle(fontSize: 16),
+              ),
+              Text(
+                "Xuly: $vieText",
+                style: const TextStyle(fontSize: 16),
+              ),
+              Text(
+                "Translate: $engText",
+                style: const TextStyle(fontSize: 16),
+              ),
+              Text("Output:"),
+              Text("   Positive: ${prediction[1]}"),
+              Text("   Negative: ${prediction[0]}"),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
+
+
+
+
